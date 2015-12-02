@@ -3,7 +3,9 @@ package org.khanacademy.infection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Network {
+import org.khanacademy.infection.SubsetSum.ICountable;
+
+public class Infection implements ICountable {
 	
 	private final Set<User> users = new HashSet<>();
 	
@@ -14,13 +16,17 @@ public class Network {
 	public void addUser(User user) {
 		users.add(user);
 		
-		Network userNetwork = user.getNetwork();
-		if (userNetwork != this) {
-			for (User addition : userNetwork.users) {
-				addition.setNetwork(this);
+		Infection userInfection = user.getInfection();
+		if (userInfection != this) {
+			for (User addition : userInfection.users) {
+				addition.setInfection(this);
 				users.add(addition);
 			}
 		}
+	}
+	
+	public void removeUser(User user) {
+		users.remove(user);
 	}
 	
 	public void prune(User root) {
@@ -34,10 +40,10 @@ public class Network {
 			}
 		}
 		
-		Network split = new Network();
+		Infection split = new Infection();
 		split.users.addAll(removed);
 		for (User user : removed) {
-			user.setNetwork(split);
+			user.setInfection(split);
 		}
 	}
 
@@ -54,13 +60,21 @@ public class Network {
 
 	public void addCondition(String condition) {
 		for (User user : users) {
-			user.addCondition(condition, false);
+			user.addCondition(condition);
 		}
 	}
 
 	public void removeCondition(String condition) {
 		for (User user : users) {
-			user.removeCondition(condition, false);
+			user.removeCondition(condition);
+		}
+	}
+
+	public void infectUpTo(String condition, int n) {
+		for (User user : users) {
+			if (n <= 0) break;
+			user.addCondition(condition);
+			n--;
 		}
 	}
 	
