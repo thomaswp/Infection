@@ -3,6 +3,8 @@ Infection
 
 Models a set of users who are using a product, and simulates the introduction to of new features such that users who are connected get the same version of the product.
 
+Created by Thomas Price (twprice@ncsu.edu).
+
 ## Setup
 This project can be imported directly into eclipse, or run from the command line.
 
