@@ -12,6 +12,8 @@ public class Tests {
 	// Use a fixed seed for reproducability
 	private final static Random rand = new Random(1234);
 	
+//	public void test
+	
 	@Test
 	public void testSubsetSum() {
 		for (int i = 0; i < 100; i++) {

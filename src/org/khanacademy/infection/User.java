@@ -64,7 +64,7 @@ public class User {
 	}
 	
 	public void delete() {
-		infection.removeUser(this);
+		infection.deleteUser(this);
 		for (User pupil : pupils) pupil.coaches.remove(this);
 		for (User coach : coaches) coach.pupils.remove(this);
 		population.removeUser(this);
@@ -100,6 +100,12 @@ public class User {
 		return conditions.contains(condition);
 	}
 	
+	/**
+	 * Infects this User with the given condition, which
+	 * spreads to all connected users through this User's
+	 * {@link Infection}.
+	 * @param condition The condition with which to infect users
+	 */
 	public void infect(String condition) {
 		infection.addCondition(condition);
 	}
