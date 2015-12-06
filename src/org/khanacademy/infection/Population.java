@@ -65,23 +65,32 @@ public class Population {
 		// for SubsetSum is infinity, which breaks the dynamic programming solution
 		List<Infection> subset = SubsetSum.subsetSumApproximate(infections, n - infected);
 		
-		while (subset.size() >= 0) {
-			infections.removeAll(subset);
+		// Because this is an approximation, we can actually try to find more
+		// infections that might fit in the gaps
+		while (subset.size() > 0) {
+			// First, infect the subset we've chosen and count the infected
 			for (Infection infection : subset) {
 				infection.addCondition(condition);
 				infected += infection.size();
 			}
+			// remove the infections we've already selected from the list
+			infections.removeAll(subset);
+			// see if there's another subset that will fit in the gaps
 			subset = SubsetSum.subsetSumApproximate(infections, n - infected);
 		}
 		
+		// If we've reached the threshold, or included all infections, we're done
 		if (infections.size() == 0 || Math.abs(infected - n) <= threshold) {
 			return infected;
 		}
 		
+		// If not, choose the largest infection and infect the remaining number
 		List<Infection> list = new ArrayList<Infection>(infections);
 		Collections.sort(list, SubsetSum.COUNTABLE_COMPARATOR);
 		Infection largest = list.get(0);
 		
+		// There must be at least (n - infected) users in this infection
+		// So we know we've now infected n users
 		largest.infectUpTo(condition, n - infected);
 		return n;
 	}
@@ -107,6 +116,12 @@ public class Population {
 			infection.addCondition(condition);
 		}
 		return infected;
+	}
+	
+	public int countUsersWithCondition(String condition) {
+		int n = 0;
+		for (User user : allUsers) if (user.hasCondition(condition)) n++;
+		return n;
 	}
 	
 }

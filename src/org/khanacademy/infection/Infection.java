@@ -63,11 +63,13 @@ public class Infection implements ICountable {
 				removed.add(user);
 			}
 		}
+		users.clear();
+		users.addAll(included);
 		
 		// Spin these users off into new infections
 		while (removed.size() > 0) {
 			// Pop a user, create a new infection and find its members
-			User pop = users.iterator().next();
+			User pop = removed.iterator().next();
 			Infection split = new Infection();
 			Set<User> connected = new HashSet<>();
 			addSubgraph(pop, connected);
@@ -124,6 +126,27 @@ public class Infection implements ICountable {
 			user.addCondition(condition);
 			n--;
 		}
+	}
+
+	/**
+	 * Return whether or not all users in this infection
+	 * consistently have or don't have the given condition
+	 * @param condition The condition
+	 * @return True if all users either have or don't have the given condition
+	 */
+	public boolean consistent(String condition) {
+		boolean first = true;
+		boolean has = true;
+		for (User user : users) {
+			if (first) {
+				has = user.hasCondition(condition);
+				first = false;
+			} else if (user.hasCondition(condition) != has) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	

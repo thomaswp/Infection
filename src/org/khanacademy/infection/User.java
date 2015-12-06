@@ -54,6 +54,7 @@ public class User {
 	
 	public static boolean addCoach(User coach, User pupil) {
 		if (coach == null || pupil == null) return false;
+		if (coach == pupil) return false;
 		if (pupil.coaches.contains(coach)) return false;
 		
 		pupil.coaches.add(coach);
