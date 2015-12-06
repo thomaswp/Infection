@@ -174,7 +174,7 @@ public class User {
 	 */
 	public static boolean limitedInfectionExact(String condition, int n) {
 		Set<Infection> infections = getInfections();
-		List<Infection> subset = SubsetSum.subsetSum(infections, n);
+		List<Infection> subset = SubsetSum.subsetSum(infections, n, 0);
 		if (subset == null) return false;
 		for (Infection infection : subset) {
 			infection.addCondition(condition);

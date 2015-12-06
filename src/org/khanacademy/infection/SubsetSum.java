@@ -1,7 +1,6 @@
 package org.khanacademy.infection;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,7 +39,7 @@ public class SubsetSum {
 		int size();
 	}
 
-	public static <T extends ICountable> List<T> subsetSum(Collection<T> set, int n) {
+	public static <T extends ICountable> List<T> subsetSum(Collection<T> set, int n, int threshold) {
 		
 		int length = set.size(); 
 				
@@ -52,7 +51,7 @@ public class SubsetSum {
 			sizes[i] = list.get(i).size();
 		}
 		
-		int[] subsetSum = subsetSum(sizes, n);
+		int[] subsetSum = subsetSum(sizes, n, threshold);
 		if (subsetSum == null) return null;
 		
 		List<T> subset = new ArrayList<>();
@@ -61,32 +60,36 @@ public class SubsetSum {
 		return subset;
 	}
 	
-	public static int[] subsetSum(int[] sizes, int n) {
+	public static int[] subsetSum(int[] items, int n, int threshold) {
 		
-		int length = sizes.length;
+		int length = items.length;
+		if (length == 0) {
+			return Math.abs(n) <= threshold ? new int[0] : null;
+		}
 		
 		int sumPositive = 0;
 		int sumNegative = 0;
 		for (int i = 0; i < length; i++) {
-			int v = sizes[i];
+			int v = items[i];
 			if (v > 0) sumPositive += v;
 			else sumNegative += v;
 		}
-		if (sumPositive > n) sumPositive = n;
-		if (sumPositive < n) return null;
+		if (sumPositive > n + threshold) sumPositive = n;
+		if (sumPositive < n - threshold) return null;
 		
 		int width = sumPositive - sumNegative + 1;
+		if (width <= 0) return null;
 		
 		boolean[][] sumArray = new boolean[length][width]; 
 		for (int i = 0; i < width; i++) {
-			sumArray[0][i] = sizes[0] == sumNegative + i;
+			sumArray[0][i] = items[0] == i + sumNegative;
 		}
 		for (int i = 1; i < length; i++) {
 			for (int j = 0; j < width; j++) {
-				if (sumArray[i-1][j] || sizes[i] == sumNegative + j) {
+				if (sumArray[i-1][j] || items[i] == j + sumNegative) {
 					sumArray[i][j] = true;
 				} else {
-					int x = j - sizes[i];
+					int x = j - items[i];
 					if (x >= 0 && x < width && sumArray[i-1][x]) {
 						sumArray[i][j] = true;
 					}
@@ -94,20 +97,36 @@ public class SubsetSum {
 			}
 		}
 		
-		for (int i = 0; i < length; i++) {
-			System.out.println(Arrays.toString(sumArray[i]));
-		}
+//		for (int i = 0; i < width; i++) {
+//			for (int j = 0; j < length; j++) {
+//				System.out.print(sumArray[j][i] ? "1 " : "0 ");
+//			}
+//			System.out.println();
+//		}
 		
-		int r = length - 1, c = width - 1;
-		if (!sumArray[r][c]) return null;
+		int r = length - 1, c = n - sumNegative;
+		boolean found = false;
+		for (int i = 0; i <= threshold; i++) {
+			c = n - sumNegative + i;
+			if (c < width && sumArray[r][c]) {
+				found = true;
+				break;
+			}
+			c = n - sumNegative - i;
+			if (c >= 0 && c < width && sumArray[r][c]) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) return null;
 
 		List<Integer> indices = new ArrayList<>();
-		while (c >= 0 && r > 0) {
-			if (!sumArray[r][c]) break;
+		while (r >= 0 && c < width && sumArray[r][c]) {
 			while (r > 0 && sumArray[r-1][c]) r--;
-			if (sizes[r] == 0) break;
+			if (items[r] == 0) break;
 			indices.add(r);
-			c -= sizes[r];
+			c -= items[r];
+			r--;
 		}
 		
 		int[] indicesArray = new int[indices.size()];
