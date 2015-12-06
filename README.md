@@ -7,7 +7,7 @@ Models a set of users who are using a product, and simulates the introduction to
 This project can be imported directly into eclipse, or run from the command line.
 
 ### Running
-To compile the project and run the included tests, make sure `java` and `javac` are on the PATH and run the following commands.
+To compile the project and run the included tests, make sure `java` and `javac` are on the PATH and run the following commands from the root director (where this README is).
 
 On Windows:
 
