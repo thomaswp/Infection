@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Utility class for solving and approximating the Subset Sum problem
+ */
 public class SubsetSum {
 
 	public final static Comparator<ICountable> COUNTABLE_COMPARATOR = 

@@ -3,6 +3,9 @@ package org.khanacademy.infection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Represents a user on the website.
+ */
 public class User {
 	
 	private String userName;
@@ -16,6 +19,9 @@ public class User {
 	private final Set<User> coaches = new HashSet<>();
 	private final Set<User> pupils = new HashSet<>();
 	
+	// We model the site version as a set of conditions, since
+	// We could in theory test "Feature A" and "Feature B"
+	// on two overlapping populations.
 	private final HashSet<String> conditions = new HashSet<>();
 	
 	private final Population population;

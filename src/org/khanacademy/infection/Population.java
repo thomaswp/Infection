@@ -6,6 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Represents a population of {@link User}s and exposes
+ * methods for infecting them.
+ */
 public class Population {
 
 	private int nextUserID = 0;
@@ -45,9 +49,9 @@ public class Population {
 	 * to do so while still infecting at least (n - threshold) users.
 	 * If this is not possible, the algorithm will infect as many whole infection
 	 * groups as possible, and then infect only a portion of one additional infection
-	 * group such that n total users are infected.
+	 * group, such that n total users are infected.
 	 * The only circumstance under which fewer than (n - threshold) users will be infected
-	 * is if the total users is fewer than n.
+	 * is if the total users is fewer than that quantity.
 	 * 
 	 * @param condition The condition with which to infect users
 	 * @param n The desired number of users to infect
@@ -99,8 +103,8 @@ public class Population {
 	 * If threshold if 0, infects exactly n Users with the given condition without 
 	 * breaking up any infection groups, or fails if this is not possible.
 	 * If threshold is not 0, the exact number of infected users can be
-	 * be m, where (n - threshold <= m <= n + threshold).
-	 * We return the actual number of users infected, or -1 for failure.
+	 * m, where (n - threshold <= m <= n + threshold) and abs(m-n) is minimized.
+	 * Returns the actual number of users infected, or -1 for failure.
 	 * @param condition The condition with which to infect users
 	 * @param n The number of users to infect
 	 * @param threshold A margin of error n.
@@ -118,6 +122,11 @@ public class Population {
 		return infected;
 	}
 	
+	/**
+	 * Returns the number of users infected with a given test condition.
+	 * @param condition The condition
+	 * @return The number infected
+	 */
 	public int countUsersWithCondition(String condition) {
 		int n = 0;
 		for (User user : allUsers) if (user.hasCondition(condition)) n++;
